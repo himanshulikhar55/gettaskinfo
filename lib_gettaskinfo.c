@@ -33,9 +33,11 @@ struct task_info *lib_gettaskinfo(){
         fprintf(stderr, "gettaskinfo failed, errno = %d\n", errno);
         printf("Something ducked up :(\n");
     }
-    for(int i = 0; i < MAX_BUFF_SIZE; i++){
+    for(int i = 0; i < 30; i++){
+        // printf("%c-(%d)", buff[i], i);
         printf("%c", buff[i]);
     }
+    printf("\n");
     printf("The complete string: %s\n", buff);
 
     token = strtok(buff, ",");
