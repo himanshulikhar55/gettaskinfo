@@ -20,37 +20,42 @@ struct task_info *lib_gettaskinfo(){
         return task;
     }
     for(int i = 0; i < MAX_BUFF_SIZE; i++){
-        buff[i] = 'a';
+        buff[i] = '\0';
     }
-    buff[MAX_BUFF_SIZE-1] = '\0';
+
+    task = (struct task_info *)malloc(sizeof(struct task_info));
+    
     pid = getpid();
-    printf("The complete string: %s\n", buff);
     rv = syscall(__NR_gettaskinfo, pid, buff);
-    printf("rv: %ld\n", rv);
+    
     if(rv == 1){
         printf("System call was successfull :)\nCheck dmesg if you want\n");
     } else {
         fprintf(stderr, "gettaskinfo failed, errno = %d\n", errno);
         printf("Something ducked up :(\n");
     }
-    for(int i = 0; i < 30; i++){
-        // printf("%c-(%d)", buff[i], i);
-        printf("%c", buff[i]);
-    }
-    printf("\n");
-    printf("The complete string: %s\n", buff);
+    // for(int i = 0; i < 30; i++){
+    //     printf("%c-(%d)", buff[i], i);
+    //     printf("%c", buff[i]);
+    // }
+    // printf("\n");
+    // printf("The complete string: %s\n", buff);
 
     token = strtok(buff, ",");
-    printf("Proc name: %s\n", token);
+    // printf("Proc name: %s\n", token);
+    task->name = token;
 
     token = strtok(NULL, ",");
-    printf("Proc state: %s\n", token);
+    // printf("Proc state: %s\n", token);
+    task->state = strtol(token, NULL, 10);
 
     token = strtok(NULL, ",");
-    printf("Proc start time: %s\n", token);
+    // printf("Proc start time: %s\n", token);
+    task->start_time = token;
 
     token = strtok(NULL, ",");
-    printf("Proc normal priority: %s\n", token);
+    // printf("Proc normal priority: %s\n", token);
+    task->normal_prio = strtol(token, NULL, 10);
 
     return task;
 }

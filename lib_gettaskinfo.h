@@ -1,11 +1,12 @@
 #include <stdint.h>
 
-#define MAX_BUFF_SIZE 1024
+#define MAX_BUFF_SIZE 35
 #define __NR_gettaskinfo 449
 
 struct task_info{
+    char *name;
     long int state;
-    uint64_t start_time;
+    char *start_time;
     int normal_prio;
 };
 

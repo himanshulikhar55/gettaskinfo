@@ -16,15 +16,10 @@ int vout(char *string, char *fmt, ...){
 int main(){
     printf("%lu\n", sizeof(unsigned int));
     struct task_info *task = lib_gettaskinfo();
-    // struct task_struct *task = pid_task(find_vpid(getpid()), PIDTYPE_PID);
-    // printf("%s\n", task->comm);
-    // char string[100];
-    // int n = vout(string, "%d,", 200);
-    // printf("The string is:  %s. n=%d\n", string, n);
-    // n += vout(string+n, "%d,", 400);
-    // printf("The string is:  %s. total chars printed=%d\n", string, n);
-    // for(int i=0;i<n;i++)
-    //     printf("%c-()", string[i]);
-    // printf("\n");
+    // printf("Syscall was successfull\n");
+    printf("Name: %s\n", task->name);
+    printf("State: %ld\n", task->state);
+    printf("Start time: %s\n", task->start_time);
+    printf("Normal priority: %d\n", task->normal_prio);
     return 1;
 }

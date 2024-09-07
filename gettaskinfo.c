@@ -23,6 +23,8 @@ int print_to_buffer(char *string, char *fmt, ...){
 
 SYSCALL_DEFINE2(gettaskinfo, int, pid, char *, buffer){
     struct task_struct *task;
+    struct tm result;
+    struct timespec64 start_time, boot_time, real_start_time, real_time;
     int len, n;
     unsigned long m;
     char kern_buff[30];
@@ -66,14 +68,46 @@ SYSCALL_DEFINE2(gettaskinfo, int, pid, char *, buffer){
     // }
     printk(KERN_ALERT "Proc state: %u\n", task->__state);
 
-    n = print_to_buffer(kern_buff, "%llu,", task->start_time);
-    m = copy_to_user(buffer+len, kern_buff, MAX_START_TIME_SIZE+1);
+    // Convert task start_time to seconds and nanoseconds
+    start_time.tv_sec = task->start_time / 1000000000ULL;  // Convert nanoseconds to seconds
+    start_time.tv_nsec = task->start_time % 1000000000ULL; // Remaining nanoseconds
+
+    // Subtract start_time (from boot) from real_time to get actual start time
+    ktime_get_boottime_ts64(&boot_time);
+    ktime_get_real_ts64(&real_time);
+
+    real_start_time = timespec64_sub(real_time, boot_time);
+    real_start_time = timespec64_add(real_start_time, start_time);
+
+    // Debugging: Print the real start time
+    printk(KERN_ALERT "Real start time (seconds since epoch): %lld\n", real_start_time.tv_sec);
+
+    // Convert real start time to human-readable format
+    time64_to_tm(real_start_time.tv_sec, 0, &result);
+    // Adjust time to IST (UTC + 5:30)
+    result.tm_hour += 5;
+    result.tm_min += 30;
+
+    // Handle minute and hour overflow
+    if (result.tm_min >= 60) {
+        result.tm_min -= 60;
+        result.tm_hour += 1;
+    }
+    if (result.tm_hour >= 24) {
+        result.tm_hour -= 24;
+        result.tm_mday += 1;
+        // You may need to handle the end of month/year here if required.
+    }
+    // Format the time as a string
+    n = print_to_buffer(kern_buff, "%04ld-%02d-%02d %02d:%02d:%02d,",
+                        result.tm_year + 1900, result.tm_mon + 1,
+                        result.tm_mday, result.tm_hour,
+                        result.tm_min, result.tm_sec);
+
+    m = copy_to_user(buffer + len, kern_buff, MAX_START_TIME_SIZE + 1);
     len += n;
-    // if(n){
-    //     printk(KERN_ALERT "Could not copy task->start_time\n");
-    //     return -EFAULT;
-    // }
-    printk(KERN_ALERT "Proc time: %llu\n", task->start_time);
+
+    printk(KERN_ALERT "Proc start time (human-readable): %s\n", kern_buff);
 
     n = print_to_buffer(kern_buff, "%d,", task->normal_prio);
     m = copy_to_user(buffer+len, kern_buff, MAX_PRIORITY_SIZE+1);
