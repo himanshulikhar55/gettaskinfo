@@ -4,7 +4,7 @@
 
 #define MAX_ARG_SIZE 30
 #define MAX_PROC_NAME_SIZE 25
-#define MAX_STATE_SIZE 1 // userspace process always in running state, i.e, 0x0000
+#define MAX_STATE_SIZE 1
 #define MAX_START_TIME_SIZE 21
 #define MAX_PRIORITY_SIZE 3
 
@@ -55,7 +55,7 @@ SYSCALL_DEFINE2(gettaskinfo, int, pid, char *, buf){
         printk(KERN_ALERT "PID invalid\n");
         return -ESRCH;
     }
-    if(!buffer){
+    if(!buf){
         printk(KERN_ALERT "Buffer Invalid\n");
         return -EFAULT;
     }
@@ -72,13 +72,13 @@ SYSCALL_DEFINE2(gettaskinfo, int, pid, char *, buf){
     len = 0;
 
     n = print_to_buffer(kern_buff, "%s,", task->comm);
-    m = copy_to_user(buffer+len, kern_buff, MAX_PROC_NAME_SIZE+1);
+    m = copy_to_user(buf+len, kern_buff, MAX_PROC_NAME_SIZE+1);
     len += n;
     printk(KERN_ALERT "Proc name: %s\n", kern_buff);
 
     /* -1 unrunnable, 0 runnable, >0 stopped */
     n = print_to_buffer(kern_buff, "%ld,", task->state);
-    m = copy_to_user(buffer+len, kern_buff, MAX_STATE_SIZE+1);
+    m = copy_to_user(buf+len, kern_buff, MAX_STATE_SIZE+1);
     len += n;
     printk(KERN_ALERT "Proc state: %ld\n", task->state);
 
@@ -120,13 +120,13 @@ SYSCALL_DEFINE2(gettaskinfo, int, pid, char *, buf){
                         result.tm_mday, result.tm_hour,
                         result.tm_min, result.tm_sec);
 
-    m = copy_to_user(buffer + len, kern_buff, MAX_START_TIME_SIZE + 1);
+    m = copy_to_user(buf + len, kern_buff, MAX_START_TIME_SIZE + 1);
     len += n;
     printk(KERN_ALERT "Proc start time in ns: %llu\n", task->start_time);
     printk(KERN_ALERT "Proc start time (human-readable): %s\n", kern_buff);
 
     n = print_to_buffer(kern_buff, "%d,", task->normal_prio);
-    m = copy_to_user(buffer+len, kern_buff, MAX_PRIORITY_SIZE+1);
+    m = copy_to_user(buf+len, kern_buff, MAX_PRIORITY_SIZE+1);
     len += n;
     printk(KERN_ALERT "Proc normal prio: %d\n", task->normal_prio);
 
