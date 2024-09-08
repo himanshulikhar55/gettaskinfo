@@ -34,27 +34,17 @@ struct task_info *lib_gettaskinfo(){
         fprintf(stderr, "gettaskinfo failed, errno = %d\n", errno);
         printf("Something ducked up :(\n");
     }
-    // for(int i = 0; i < 30; i++){
-    //     printf("%c-(%d)", buff[i], i);
-    //     printf("%c", buff[i]);
-    // }
-    // printf("\n");
-    // printf("The complete string: %s\n", buff);
 
     token = strtok(buff, ",");
-    // printf("Proc name: %s\n", token);
     task->name = token;
 
     token = strtok(NULL, ",");
-    // printf("Proc state: %s\n", token);
     task->state = strtol(token, NULL, 10);
 
     token = strtok(NULL, ",");
-    // printf("Proc start time: %s\n", token);
     task->start_time = token;
 
     token = strtok(NULL, ",");
-    // printf("Proc normal priority: %s\n", token);
     task->normal_prio = strtol(token, NULL, 10);
 
     return task;

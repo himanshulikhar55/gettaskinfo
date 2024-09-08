@@ -14,9 +14,8 @@ int vout(char *string, char *fmt, ...){
     return n;
 }
 int main(){
-    printf("%lu\n", sizeof(unsigned int));
     struct task_info *task = lib_gettaskinfo();
-    // printf("Syscall was successfull\n");
+    printf("Syscall was successfull. Some information about this process:\n");
     printf("Name: %s\n", task->name);
     printf("State: %ld\n", task->state);
     printf("Start time: %s\n", task->start_time);
