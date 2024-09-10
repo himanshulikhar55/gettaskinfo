@@ -19,13 +19,15 @@ sudo make install
 - The `lib_gettaskinfo.c` contains the `lib_gettaskinfo` function.
 - Run the following command to test the system call:
 ```
-gcc user.c lib-gettaskinfo.c
+gcc -o <outfile> user.c lib-gettaskinfo.c
 ```
-- After compiling the file, execute the `a.out` file to get the output.
+- After compiling the file, execute the `<outfile>` file to get the output.
 
 ## Design Decisions:
 - Details of the `gettaskinfo` system call:
-    - It uses the `pid` sent by the userspace function to find the corresponding `struct pid` and gets the `struct task_struct` using the `pid_task` function.
+    - It gets the <b>process name, state, start time, and normal priority</b> (in that order) for the calling userspace process.<br>
+      <br> <b>NOTE:</b> The task_struct.comm (i.e., the process name field in `task_struct` is just 16 bytes long. Hence make sure that the `<outfile>` that you name is of length `<=16`. The program will not fail but will print an incomplete name. This limit is defined by the `TASK_COMM_LEN` in the `./include/linux/sched.h` file.<br><br>
+    - It uses the `pid` sent by the userspace function (in this case, the `lib_gettaskinfo` wrapper) to find the corresponding `struct pid` and gets the `struct task_struct` using the `pid_task` function.
     - Getting the required fields was pretty straightforward, but printing it into the buffer was a bit tricky.
     - We tried printing it using the `copy_to_user` function but failed since the data was not in string format.
     - We used a local buffer (i.e., one declared in the kernel space) and stored the required info in it using the `vsnprintf` function.
