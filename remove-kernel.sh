@@ -3,6 +3,7 @@
 folder_name=$1
 
 # Check if the input starts with "5.15.0"
+# replace 5.15.0* with the kernel series you never want to be removed
 if [[ "$folder_name" == 5.15.0* ]]; then
     echo "Error: You cannot delete folders starting with '5.15.0'"
     exit 1
