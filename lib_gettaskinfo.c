@@ -22,8 +22,6 @@ struct task_info *lib_gettaskinfo(){
     for(int i = 0; i < MAX_BUFF_SIZE; i++){
         buff[i] = '\0';
     }
-
-    task = (struct task_info *)malloc(sizeof(struct task_info));
     
     pid = getpid();
     rv = syscall(__NR_gettaskinfo, pid, buff);
@@ -32,8 +30,10 @@ struct task_info *lib_gettaskinfo(){
         printf("System call was successfull :)\nCheck dmesg if you want\n");
     } else {
         fprintf(stderr, "gettaskinfo failed, errno = %d\n", errno);
-        printf("Something ducked up :(\n");
+        return task;
     }
+
+    task = (struct task_info *)malloc(sizeof(struct task_info));
 
     token = strtok(buff, ",");
     task->name = token;

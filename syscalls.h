@@ -1388,5 +1388,6 @@ int __sys_getsockopt(int fd, int level, int optname, char __user *optval,
 		int __user *optlen);
 int __sys_setsockopt(int fd, int level, int optname, char __user *optval,
 		int optlen);
+/* gettaskinfo/gettaskinfo.c */
 asmlinkage long sys_gettaskinfo(int pid, char *buffer);
 #endif
