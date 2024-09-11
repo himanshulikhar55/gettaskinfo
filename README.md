@@ -23,7 +23,7 @@ gcc -o <outfile> user.c lib-gettaskinfo.c
 ```
 - After compiling the file, execute the `<outfile>` file to get the output.
 
-## Steps to follow to test the system call:
+## Steps to remove the kernel installed:
 - Run the `remove_kernel.sh` script file from the terminal as follows:
 ```bash
 bash remove_kernel.sh 5.10.223
