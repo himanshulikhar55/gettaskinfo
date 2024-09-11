@@ -23,6 +23,13 @@ gcc -o <outfile> user.c lib-gettaskinfo.c
 ```
 - After compiling the file, execute the `<outfile>` file to get the output.
 
+## Steps to follow to test the system call:
+- Run the `remove_kernel.sh` script file from the terminal as follows:
+```bash
+bash remove_kernel.sh 5.10.223
+```
+This command will delete the kernel if you are not booted into that kernel version while running the script.
+
 ## Design Decisions:
 - Details of the `gettaskinfo` system call:
     - It gets the <b>process name, state, start time, and normal priority</b> (in that order) for the calling userspace process.<br>
