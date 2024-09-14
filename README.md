@@ -8,6 +8,9 @@ In this assignment, we implemented a system call `sys_gettaskinfo` to get inform
 <br><br>![image](https://github.com/user-attachments/assets/d1ee5928-7824-4874-957b-7b2934528885)
 - Make a new folder called `gettaskinfo` in the current directory (i.e., `./`).
 - Add the `Makefile` and `gettaskinfo.c` files in the `./gettaskinfo` folder.
+- Add the `getaskinfo` folder in the Makefile of the kernel as follows:<br><br>
+![image](https://github.com/user-attachments/assets/2a692d45-2347-4460-b1d7-5fbdbd6ea8a5)
+
 - Compile and install the kernel using the following commands:
 ```
 sudo make -j <num_of_threads>
